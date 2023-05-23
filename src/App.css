@@ -1,0 +1,15 @@
+#root{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+  .mainPage{
+    flex-grow: 1;
+  }
+  .contendor{
+    border-radius:5px ;
+    box-shadow: 0px 7px 10px 1px rgba(0, 0, 0, 0.75);
+  }
+  
+ 
