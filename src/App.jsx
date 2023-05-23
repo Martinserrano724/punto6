@@ -2,11 +2,16 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { Form, Button, Container, Row , Col } from "react-bootstrap";
+import {  Container} from "react-bootstrap";
+import FormularioColores from './assets/components/FormularioColores';
+import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
 
   return (
-    <>
+    < >
+    <Container className=''>
+      <FormularioColores/>
+    </Container>
       
     </>
   )
