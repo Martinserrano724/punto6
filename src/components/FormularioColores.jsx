@@ -1,13 +1,12 @@
 import React from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import '../formulario.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "../formulario.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import ListaColores from "./ListaColores";
 
-
-
+let colorCuadro = "";
 const FormularioColores = () => {
   let coloresLocalStorage =
     JSON.parse(localStorage.getItem("listaColores")) || [];
@@ -44,13 +43,16 @@ const FormularioColores = () => {
   let posicion;
   const [color, setColor] = useState("");
   const [arrayColores, setArrayColores] = useState(coloresLocalStorage);
-
+  
+  // nos permite ejecutar lineas de codigo a medida q se va cargando el doom 
   useEffect(() => {
+    //se ejecuta en las montadas de domm
     localStorage.setItem("listaColores", JSON.stringify(arrayColores));
   }, [arrayColores]);
 
-
-  const controlarColores = () => {
+  //funcion para controlar los colores ingresados coincidan con los de los array precargados 
+  const controlarColores = (e) => {
+   // console.log('color: '+color);
     let txtMin = color.toLowerCase();
     listaColores.map((col, index) => {
       if (col === txtMin) {
@@ -62,29 +64,36 @@ const FormularioColores = () => {
     });
     return posicion;
   };
-
+//funcion para cargar el array en el local storage
   const handleSubmit = (e) => {
     e.preventDefault();
     posicion = controlarColores();
-   
+    canbiarColor();
     if (posicion != -1 && posicion != undefined) {
       //cargo los valores en el localStorage
+      
+   //  ;
       setArrayColores([...arrayColores, colorList[posicion]]);
       //limpia input
       setColor("");
     }
   };
- 
+//funcion para eliminar el color 
+  const eliminarColor = (idColor) => {
+    let posicionColor = idColor.posicion;
 
-  const eliminarTarea = (nombreFiltrado) => {
-    let tareasFiltradas = arrayTareas.filter(
-      (itemTarea) => itemTarea != nombreFiltrado
-    );
-    setArrayTareas(tareasFiltradas);
+    let coloresFiltradas = arrayColores.filter((itemColor, index) => {
+      if (index != posicionColor) {
+        return itemColor;
+      }
+    });
+    setArrayColores(coloresFiltradas);
   };
-  const cardCaja = {
-    backgroundColor:colorList[posicion]
-  }
+  //canbia el color del cuadrado negro 
+  const canbiarColor = () => {  
+  let  posicion = controlarColores();
+      colorCuadro = colorList[posicion]
+  };
   return (
     <div>
       <Row className="   justify-content-center mt-5 ">
@@ -93,38 +102,43 @@ const FormularioColores = () => {
           <hr />
           <Form className="bg-white " onSubmit={handleSubmit}>
             <Form.Group className="mb-3 bg-white">
-            
               <Form.Label className=" bg-white text-center">
                 Ingresa un Color en español
               </Form.Label>
               <div className="d-flex ">
-              <div className="colorContainer" style={{ background: 'colorList[posicion]' }}>
-
-            </div>
-              <Form.Control
-                type="text"
-                placeholder="Ingrese un Color"
-                required
-                maxLength={100}
-                minLength={1}
-                className="bg-white h-25 align-self-center"
-                onChange={(e) =>{
-                  return setColor(e.target.value)
-                }}
-                value={color}
-              /></div>
+                <div
+                  className="colorContainer"
+                  style={{ background: `${colorCuadro}` }}
+                ></div>
+                <Form.Control
+                  type="text"
+                  placeholder="Ingrese un Color"
+                  required
+                  maxLength={100}
+                  minLength={1}
+                  className="bg-white h-25 align-self-center ms-3"
+                  onChange={(e) => {
+                    canbiarColor(e);
+                    return setColor(e.target.value);
+                  }}
+                  value={color}
+                />
+              </div>
             </Form.Group>
-            <Button className="primary" type="submit">
-              Enviar
-            </Button>
+            <div className="d-flex justify-content-center mb-5">
+              <Button className="primary " type="submit">
+                Enviar
+              </Button>
+            </div>
           </Form>
-         
         </Col>
-        <section  className="cajaContendor">
-        <ListaColores listaColores={arrayColores} ></ListaColores>
+        <section className="cajaContendor">
+          <ListaColores
+            listaColores={arrayColores}
+            eliminarColor={eliminarColor}
+          ></ListaColores>
         </section>
       </Row>
-      
     </div>
   );
 };
